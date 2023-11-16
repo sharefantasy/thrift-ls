@@ -48,10 +48,7 @@ func GetIncludePath(ast *parser.Document, includeName string) string {
 		}
 		items := strings.Split(include.Path.Value.Text, "/")
 		path := items[len(items)-1]
-		name, _, found := strings.Cut(path, ".")
-		if !found {
-			continue
-		}
+		name := strings.TrimSuffix(path, ".thrift")
 		if name == includeName {
 			return include.Path.Value.Text
 		}

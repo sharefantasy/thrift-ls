@@ -10,6 +10,7 @@ import (
 func Test_ParseInclude(t *testing.T) {
 	demoContent := `include "../user.thrift"
 include "../base.thrift"
+include "../com.github.thrift"
 `
 	ast, err := parser.Parse("test.thrift", []byte(demoContent))
 	assert.NoError(t, err)
@@ -19,6 +20,7 @@ include "../base.thrift"
 	assert.Len(t, includes, 2)
 	assert.Equal(t, "../user.thrift", includes[0].Path.Value.Text)
 	assert.Equal(t, "../base.thrift", includes[1].Path.Value.Text)
+	assert.Equal(t, "../com.github.thrift", includes[1].Path.Value.Text)
 }
 
 func Test_ParseIncludeWithError(t *testing.T) {

@@ -52,8 +52,10 @@ func Test_IncludeURI(t *testing.T) {
 
 func TestGetIncludePath(t *testing.T) {
 	file := `include "../../user.thrift"
+	include "../../com.github.api.thrift"
 service Demo {
   user.Test Api(1:user.Test2 arg1, 2:user.Test3 arg2) throws (1:user.Error1 err)
+  com.github.api.Test GithubApi(1:com.github.Test2 arg1, 2:com.github.Test3 arg2) throws (1:com.github.user.Error1 err)
 }`
 	ast, err := parser.Parse("file:///test.thrift", []byte(file))
 	assert.NoError(t, err)
@@ -74,6 +76,14 @@ service Demo {
 				includeName: "user",
 			},
 			want: "../../user.thrift",
+		},
+		{
+			name: "consecutive dot case",
+			args: args{
+				ast:         ast.(*parser.Document),
+				includeName: "com.github.api",
+			},
+			want: "../../com.github.api.thrift",
 		},
 	}
 	for _, tt := range tests {
